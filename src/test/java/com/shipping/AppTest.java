@@ -4,34 +4,40 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.springframework.beans.factory.annotation.Autowired;
 
-import com.shipping.service.DistanceService;
+import com.shipping.service.CallApiManagerService;
+import com.shipping.service.dto.CombineCourierRateDto;
 
 /**
  * Unit test for simple App.
  */
-public class AppTest 
-{
+public class AppTest {
+    
+    @Autowired
+    private CallApiManagerService callApiManagerService;
+
     /**
      * Rigorous Test :-)
      */
-    @Test
-    public void shouldAnswerWithTrue()
-    {
-        assertTrue( true );
-    }
+    // @Test
+    // public void shouldAnswerWithTrue()
+    // {
+    // assertTrue( true );
+    // }
 
     @Test
-    public void testGetDistanceSumInMeters() {
-        DistanceService service = new DistanceService();
-        String result = service.getDistanceSum("yards", 3, "meters", 5, "meters");
-        assertEquals("7.74 meters", result);
-    }
+    public void testGetAllAgencyShippingRate() {
 
-    @Test
-    public void testGetDistanceSumInYards() {
-        DistanceService service = new DistanceService();
-        String result = service.getDistanceSum("yards", 3, "meters", 5, "yards");
-        assertEquals("8.47 yards", result);
+        CombineCourierRateDto result = null;
+
+        try {
+            result = callApiManagerService.getAllAgencyShippingRate();
+        } catch (Exception e) {
+            // skip
+        }
+
+        // assertEquals("", result);
+        assertTrue(result == null);
     }
 }

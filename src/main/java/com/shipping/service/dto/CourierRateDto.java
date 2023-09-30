@@ -5,9 +5,8 @@ import java.util.Date;
 import lombok.Data;
 
 @Data
-public class CourierRate {
+public class CourierRateDto {
 
     private Integer courierName;
     private String rate;
-    private Date modifiedDate;
 }

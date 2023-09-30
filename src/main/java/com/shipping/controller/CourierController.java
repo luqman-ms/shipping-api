@@ -7,20 +7,19 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.shipping.service.CourierService;
+import com.shipping.service.CallApiManagerService;
 
 @RestController
 @RequestMapping("/api") // Base path for this controller
 public class CourierController {
 
     @Autowired
-    private CourierService courierService;
+    private CallApiManagerService callApiManagerService;
 
     @GetMapping("/getShippingRate")
     public ResponseEntity<?> getShippingRate() {
         try {
-            // return "Hello, World!";
-            return ResponseEntity.ok(courierService.getShippingRate(""));
+            return ResponseEntity.ok(callApiManagerService.getAllAgencyShippingRate());
 
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
