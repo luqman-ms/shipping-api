@@ -1,12 +1,12 @@
 package com.shipping.service.implementation;
 import java.util.Map;
 
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
 import com.shipping.service.dto.CourierRateDto;
 
-@Service
+@Component
 public class PosLajuServiceImpl implements ApiClient {
     private final RestTemplate restTemplate;
 
