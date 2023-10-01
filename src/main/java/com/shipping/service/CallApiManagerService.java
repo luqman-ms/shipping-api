@@ -1,16 +1,21 @@
 package com.shipping.service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ExecutionException;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.shipping.service.dto.CombineCourierRateDto;
 import com.shipping.service.dto.CourierRateDto;
 
 @Service
 public class CallApiManagerService {
+
+    private static final Logger logger = LoggerFactory.getLogger(CallApiManagerService.class);
 
     @Autowired
     private JntService jntService;
@@ -21,7 +26,9 @@ public class CallApiManagerService {
     @Autowired
     private PosLajuService posLajuService;
 
-    public CombineCourierRateDto getAllAgencyShippingRate() throws InterruptedException, ExecutionException {
+    public List<CourierRateDto> getAllAgencyShippingRate() throws InterruptedException, ExecutionException {
+
+        logger.info("----getAllAgencyShippingRate----");
 
         // call api jnt task
         CompletableFuture<CourierRateDto> callJntApi = CompletableFuture
@@ -36,16 +43,16 @@ public class CallApiManagerService {
                 .supplyAsync(() -> posLajuService.getShippingRate());
 
         // combine the results with async api call
-        CompletableFuture<CombineCourierRateDto> combinedFuture = CompletableFuture
+        CompletableFuture<List<CourierRateDto>> combinedFuture = CompletableFuture
                 .allOf(callJntApi, callCityLinkApi, callPosLajuApi)
                 .thenApplyAsync(voidResult -> {
-                    CombineCourierRateDto combinedResult = new CombineCourierRateDto();
-                    combinedResult.setJntRate(callJntApi.join());
-                    combinedResult.setCityLinkRate(callCityLinkApi.join());
-                    combinedResult.setPosLajuRate(callPosLajuApi.join());
+                    List<CourierRateDto> combinedResult = new ArrayList<CourierRateDto>();
+                    combinedResult.add(callJntApi.join());
+                    combinedResult.add(callCityLinkApi.join());
+                    combinedResult.add(callPosLajuApi.join());
                     return combinedResult;
                 });
 
-        return combinedFuture.get(); 
+        return combinedFuture.get();
     }
 }

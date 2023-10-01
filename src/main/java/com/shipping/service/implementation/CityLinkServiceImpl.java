@@ -1,5 +1,7 @@
 package com.shipping.service.implementation;
 
+import java.util.Map;
+
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,6 +17,11 @@ public class CityLinkServiceImpl implements ApiClient {
 
     @Override
     public CourierRateDto fetchData(String url) {
-        return restTemplate.getForObject(url, CourierRateDto.class);
+        Map<String, Object> response = restTemplate.getForObject(url, Map.class);
+        
+        CourierRateDto result = new CourierRateDto();
+        result.setCourierName((String) response.get("courierName"));
+        result.setRate((String) response.get("rate"));
+        return result;
     }
 }
